@@ -14,7 +14,7 @@ const theme = createTheme({
         background: {
             default: '#171717',
             paper: '#1c1c1c',
-        },
+        }
     },
     components: {
         MuiCssBaseline: {
