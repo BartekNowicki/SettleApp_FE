@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {Provider} from 'react-redux';
 import App from './App';
 import {Box, Container, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
+import store from "./store/store.ts";
 
 const theme = createTheme({
     palette: {
@@ -30,24 +32,26 @@ const theme = createTheme({
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <Container maxWidth="lg" sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'background.paper'
-            }}>
-                <Box sx={{
-                    height: '720px',
-                    width: '80%',
-                    border: '1px solid red'
+        <Provider store={store}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                <Container maxWidth="lg" sx={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'background.paper'
                 }}>
-                    <App/>
-                </Box>
-            </Container>
-        </ThemeProvider>
+                    <Box sx={{
+                        height: '720px',
+                        width: '80%',
+                        border: '1px solid red'
+                    }}>
+                        <App/>
+                    </Box>
+                </Container>
+            </ThemeProvider>
+        </Provider>
     </React.StrictMode>,
 );

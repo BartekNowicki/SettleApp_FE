@@ -1,11 +1,20 @@
-// import { useState } from 'react'
-// import './App.css'
-
 import {Typography} from "@mui/material";
 import ErrorBoundary from "./error_handling/ErrorBoundary.tsx";
+import {fetchCosts} from "./store/costSlice.ts";
+import {fetchEvents} from "./store/eventSlice.ts";
+import {fetchUsers} from "./store/userSlice.ts";
+import {useEffect} from "react";
+import {useDispatch} from 'react-redux';
+
 
 function App() {
-    // const [count, setCount] = useState(0);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUsers());
+        dispatch(fetchEvents());
+        dispatch(fetchCosts());
+    }, [dispatch]);
 
 
     return (
