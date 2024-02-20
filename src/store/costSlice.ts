@@ -30,7 +30,9 @@ export const fetchCosts = createAsyncThunk<Cost[], void>(
 const costSlice = createSlice({
     name: 'cost',
     initialState,
-    reducers: {},
+    reducers: {
+        //actions will be defined here and exported at the bottom
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchCosts.pending, (state) => {

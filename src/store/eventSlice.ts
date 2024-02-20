@@ -1,4 +1,3 @@
-// eventSlice.ts
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {Event} from "../model/Event.ts";

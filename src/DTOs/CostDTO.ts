@@ -3,6 +3,6 @@ export interface CostDTO {
     name: string;
     quantity: number;
     unitPrice: number;
-    userId?: number;
-    eventId?: number;
+    userId: number;
+    eventId: number;
 }

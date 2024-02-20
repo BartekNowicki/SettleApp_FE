@@ -3,6 +3,6 @@ export interface EventDTO {
     status: string;
     eventDate: string;
     createdByUserId: number;
-    participantIds?: number[];
-    productIds?: number[];
+    participantIds: number[];
+    productIds: number[];
 }

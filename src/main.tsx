@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';
 import App from './App';
 import {Box, Container, createTheme, CssBaseline, ThemeProvider} from '@mui/material';
-import store from "./store/store.ts";
+import {store} from "./store/store.ts";
 
 const theme = createTheme({
     palette: {

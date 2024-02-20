@@ -5,10 +5,11 @@ import {fetchEvents} from "./store/eventSlice.ts";
 import {fetchUsers} from "./store/userSlice.ts";
 import {useEffect} from "react";
 import {useDispatch} from 'react-redux';
+import {AppDispatch} from "./store/store.ts";
 
 
 function App() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         dispatch(fetchUsers());
