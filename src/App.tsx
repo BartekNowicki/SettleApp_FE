@@ -12,9 +12,13 @@ function App() {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        dispatch(fetchUsers());
-        dispatch(fetchEvents());
-        dispatch(fetchCosts());
+        const fetchData = async () => {
+            await dispatch(fetchUsers());
+            await dispatch(fetchEvents());
+            await dispatch(fetchCosts());
+        };
+
+        fetchData();
     }, [dispatch]);
 
 
