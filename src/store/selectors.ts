@@ -4,12 +4,13 @@ import {Event} from "../model/Event";
 import {Cost} from "../model/Cost.ts";
 
 export const selectUserById = (userId: number) => (state: RootState): User => {
-    const user = state.user.users[userId];
+    const user = state.user.users.find(user => user.userId === userId);
     if (!user) {
         throw new Error(`User with ID ${userId} not found`);
     }
     return user;
 };
+
 
 export const selectEventById = (eventId: number) => (state: RootState): Event => {
     const event = state.event.events.find(event => event.eventId === eventId);
@@ -26,3 +27,4 @@ export const selectCostById = (productId: number) => (state: RootState): Cost =>
     }
     return cost;
 };
+
