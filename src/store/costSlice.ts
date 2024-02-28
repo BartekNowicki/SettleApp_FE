@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {Cost} from "../model/Cost.ts";
 import API_BASE_URL from '../apiConfig.ts';
+import {RootState} from "./store.ts";
 
 interface CostState {
     costs: Cost[];
@@ -15,11 +16,17 @@ const initialState: CostState = {
     error: null,
 };
 
-export const fetchCosts = createAsyncThunk<Cost[], void>(
+export const fetchCosts = createAsyncThunk<Cost[], void, { state: RootState }>(
     'costs/fetchCosts',
-    async () => {
+    async (_, {getState}) => {
         try {
-            const response = await axios.get<Cost[]>(`${API_BASE_URL}/costs`);
+            const token = getState().auth.token;
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const response = await axios.get<Cost[]>(`${API_BASE_URL}/costs`, config);
             return response.data;
         } catch (error) {
             throw new Error('Failed to fetch costs');
@@ -27,12 +34,10 @@ export const fetchCosts = createAsyncThunk<Cost[], void>(
     }
 );
 
-const costSlice = createSlice({
+const costSlice = createSlice<CostState>({
     name: 'cost',
     initialState,
-    reducers: {
-        //actions will be defined here and exported at the bottom
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchCosts.pending, (state) => {

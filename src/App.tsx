@@ -7,6 +7,7 @@ import {useEffect} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, persistor, RootState} from "./store/store.ts";
 import {PersistGate} from 'redux-persist/integration/react';
+import {fetchToken} from "./store/authSlice.ts";
 
 function App() {
     const dispatch = useDispatch<AppDispatch>();
@@ -14,6 +15,7 @@ function App() {
 
     useEffect(() => {
         const fetchData = async () => {
+            await dispatch(fetchToken());
             await dispatch(fetchUsers());
             await dispatch(fetchEvents());
             await dispatch(fetchCosts());

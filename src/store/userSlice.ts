@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {User} from "../model/User.ts";
 import API_BASE_URL from "../apiConfig.ts";
+import {RootState} from "./store.ts";
 
 interface UserState {
     users: User[];
@@ -15,11 +16,17 @@ const initialState: UserState = {
     error: null,
 };
 
-export const fetchUsers = createAsyncThunk<User[], void>(
+export const fetchUsers = createAsyncThunk<User[], void, { state: RootState }>(
     'users/fetchUsers',
-    async () => {
+    async (_, {getState}) => {
         try {
-            const response = await axios.get<User[]>(`${API_BASE_URL}/users`);
+            const token = getState().auth.token;
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const response = await axios.get<User[]>(`${API_BASE_URL}/users`, config);
             return response.data;
         } catch (error) {
             throw new Error('Failed to fetch users');
@@ -27,7 +34,7 @@ export const fetchUsers = createAsyncThunk<User[], void>(
     }
 );
 
-const userSlice = createSlice({
+const userSlice = createSlice<UserState>({
     name: 'user',
     initialState,
     reducers: {},

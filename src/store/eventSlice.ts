@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {Event} from "../model/Event.ts";
 import API_BASE_URL from "../apiConfig.ts";
+import {RootState} from "./store.ts";
 
 interface EventState {
     events: Event[];
@@ -15,11 +16,17 @@ const initialState: EventState = {
     error: null,
 };
 
-export const fetchEvents = createAsyncThunk<Event[], void>(
+export const fetchEvents = createAsyncThunk<Event[], void, { state: RootState }>(
     'events/fetchEvents',
-    async () => {
+    async (_, {getState}) => {
         try {
-            const response = await axios.get<Event[]>(`${API_BASE_URL}/events`);
+            const token = getState().auth.token;
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const response = await axios.get<Event[]>(`${API_BASE_URL}/events`, config);
             return response.data;
         } catch (error) {
             throw new Error('Failed to fetch events');
@@ -27,7 +34,7 @@ export const fetchEvents = createAsyncThunk<Event[], void>(
     }
 );
 
-const eventSlice = createSlice({
+const eventSlice = createSlice<EventState>({
     name: 'event',
     initialState,
     reducers: {},
