@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Cost} from "../model/Cost.ts";
 import API_BASE_URL from '../apiConfig.ts';
 import {RootState} from "./store.ts";
+import {validateTokenOrThrow} from "../security/tokenValidator.ts";
 
 interface CostState {
     costs: Cost[];
@@ -18,9 +19,11 @@ const initialState: CostState = {
 
 export const fetchCosts = createAsyncThunk<Cost[], void, { state: RootState }>(
     'costs/fetchCosts',
-    async (_, {getState}) => {
+    async (_, {getState, dispatch}) => {
         try {
-            const token = getState().auth.token;
+            const {token} = getState().auth;
+            validateTokenOrThrow(token, dispatch);
+
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,

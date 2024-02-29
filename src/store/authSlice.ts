@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
 import API_BASE_URL from "../apiConfig.ts";
+import {logout} from "./logOutSlice.ts";
 
 interface AuthState {
     token: string | null;
@@ -48,6 +49,10 @@ const authSlice = createSlice<AuthState>({
             .addCase(fetchToken.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'An error occurred';
+            })
+            .addCase(logout, (state) => {
+                console.log("LOGOUT TRIGGERED, CLEARING TOKEN");
+                state.token = null;
             });
     },
 });

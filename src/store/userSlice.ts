@@ -2,7 +2,9 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {User} from "../model/User.ts";
 import API_BASE_URL from "../apiConfig.ts";
-import {RootState} from "./store.ts";
+import {AppDispatch, RootState} from "./store.ts";
+import {validateTokenOrThrow} from "../security/tokenValidator.ts";
+
 
 interface UserState {
     users: User[];
@@ -16,11 +18,14 @@ const initialState: UserState = {
     error: null,
 };
 
-export const fetchUsers = createAsyncThunk<User[], void, { state: RootState }>(
+
+export const fetchUsers = createAsyncThunk<User[], void, { state: RootState, dispatch: AppDispatch }>(
     'users/fetchUsers',
-    async (_, {getState}) => {
+    async (_, {getState, dispatch}) => {
         try {
-            const token = getState().auth.token;
+            const {token} = getState().auth;
+            validateTokenOrThrow(token, dispatch);
+
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,

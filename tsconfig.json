@@ -30,52 +30,49 @@
   "compilerOptions": {
     // Set the ECMAScript target version to ES2020
     "target": "ES2020",
-
     // Use define for class fields to ensure compatibility with ESNext class field declarations
     "useDefineForClassFields": true,
-
     // Specify the library files to be included in the compilation
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     // Use ESNext module resolution to support modern module syntax
     "module": "ESNext",
-
     // Skip type checking of declaration files to improve compilation speed
     "skipLibCheck": true,
-
     // Specify module resolution strategy, in this case, 'node' for Node.js style module resolution
     "moduleResolution": "node",
-
     // Allow importing TypeScript files with extension '.ts'
     "allowImportingTsExtensions": true,
-
     // Enable resolving JSON modules directly
     "resolveJsonModule": true,
-
     // Treat each file as a separate module to enable faster builds
     "isolatedModules": true,
-
     // Do not emit output files during the compilation process
     "noEmit": true,
-
     // Specify the JSX factory function to use when targeting React JSX emit
-    "jsx": "react-jsx",
-
+    //"jsx": "react-jsx",
+    "jsx": "react",
     // Enable strict type checking options
     "strict": true,
-
     // Report errors on unused local variables
     "noUnusedLocals": true,
-
     // Report errors on unused function parameters
     "noUnusedParameters": true,
-
     // Report errors for fall-through cases in switch statements
     "noFallthroughCasesInSwitch": true
   },
   // Specify the folders to include in the compilation process
-  "include": ["src"],
-
+  "include": [
+    "src"
+  ],
   // Specify references to other projects (if any)
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "esModuleInterop": true
 }

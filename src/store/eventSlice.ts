@@ -3,6 +3,7 @@ import axios from 'axios';
 import {Event} from "../model/Event.ts";
 import API_BASE_URL from "../apiConfig.ts";
 import {RootState} from "./store.ts";
+import {validateTokenOrThrow} from "../security/tokenValidator.ts";
 
 interface EventState {
     events: Event[];
@@ -18,9 +19,11 @@ const initialState: EventState = {
 
 export const fetchEvents = createAsyncThunk<Event[], void, { state: RootState }>(
     'events/fetchEvents',
-    async (_, {getState}) => {
+    async (_, {getState,dispatch}) => {
         try {
-            const token = getState().auth.token;
+            const {token} = getState().auth;
+            validateTokenOrThrow(token, dispatch);
+
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
