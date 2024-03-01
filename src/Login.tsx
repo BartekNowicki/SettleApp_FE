@@ -1,9 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Box, Button, Container, TextField} from '@mui/material';
+import {fetchToken} from "./store/authSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "./store/store.ts";
+import {useNavigate} from "react-router-dom";
+import {RootState} from "./store/rootReducer.ts";
 
 const Login = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+    const {token, authError} = useSelector((state: RootState) => state.auth);
 
-    const handleClick = () => console.log("CLICK");
+    const handleClick = () => dispatch(fetchToken());
+
+    useEffect(() => {
+        if (!authError && token) {
+            navigate('/');
+        }
+    }, [authError, token, navigate]);
 
     return (
         <Container maxWidth="sm">

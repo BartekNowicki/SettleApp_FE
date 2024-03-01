@@ -1,16 +1,34 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {PURGE} from 'redux-persist';
+import {RootState} from "./store";
+import {deleteToken} from "./authSlice";
 
-const logoutSlice = createSlice({
+const clearLocalStorage = () => {
+    return new Promise((resolve) => {
+        localStorage.clear();
+        resolve();
+    });
+};
+
+const logout = createAsyncThunk<void, void, { state: RootState }>(
+    'logout/logout',
+    async (_, thunkAPI) => {
+        await clearLocalStorage();
+        thunkAPI.dispatch(deleteToken())
+    });
+
+const logoutSlice = createSlice<null>({
     name: 'logout',
     initialState: null,
-    reducers: {
-        logout: () => null, // Action creator for logout
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder.addCase(PURGE, () => null);
+        builder.addCase(logout.fulfilled, (state, action) => {
+            return null;
+        });
     },
 });
 
-export const {logout} = logoutSlice.actions;
+export {logout};
+
 export default logoutSlice.reducer;

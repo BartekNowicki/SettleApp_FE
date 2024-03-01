@@ -1,18 +1,18 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
-import API_BASE_URL from "../apiConfig.ts";
-import {logout} from "./logOutSlice.ts";
+import API_BASE_URL from "../apiConfig";
+import {ErrorMessage} from "../enums/ErrorMessage";
 
 interface AuthState {
     token: string | null;
-    loading: boolean;
-    error: string | null;
+    authLoading: boolean;
+    authError: string | null;
 }
 
 const initialState: AuthState = {
     token: null,
-    loading: false,
-    error: null,
+    authLoading: false,
+    authError: null,
 };
 
 export const fetchToken = createAsyncThunk(
@@ -27,7 +27,7 @@ export const fetchToken = createAsyncThunk(
             });
             return response.data.token;
         } catch (error) {
-            throw new Error('Failed to fetch authentication token');
+            throw new Error(ErrorMessage.FAILED_TO_FETCH_AUTHENTICATION_TOKEN);
         }
     }
 );
@@ -35,26 +35,31 @@ export const fetchToken = createAsyncThunk(
 const authSlice = createSlice<AuthState>({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        setAuthError: (state, action: PayloadAction<string | null>) => {
+            state.authError = action.payload;
+        },
+        deleteToken: (state) => {
+            state.token = null;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchToken.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.authLoading = true;
+                state.authError = null;
             })
             .addCase(fetchToken.fulfilled, (state, action: PayloadAction<string>) => {
-                state.loading = false;
+                state.authLoading = false;
                 state.token = action.payload;
             })
             .addCase(fetchToken.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message || 'An error occurred';
+                state.authLoading = false;
+                state.authError = action.error.message || ErrorMessage.AN_ERROR_OCCURRED;
             })
-            .addCase(logout, (state) => {
-                console.log("LOGOUT TRIGGERED, CLEARING TOKEN");
-                state.token = null;
-            });
     },
 });
+
+export const {setAuthError, deleteToken} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,7 +1,7 @@
 import {RootState} from "./store";
 import {User} from "../model/User";
 import {Event} from "../model/Event";
-import {Cost} from "../model/Cost.ts";
+import {Cost} from "../model/Cost";
 
 export const selectUserById = (userId: number) => (state: RootState): User => {
     const user = state.user.users.find(user => user.userId === userId);

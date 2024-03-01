@@ -1,19 +1,28 @@
-import {Typography} from "@mui/material";
+import {Button} from "@mui/material";
 import ErrorBoundary from "./error_handling/ErrorBoundary.tsx";
-import {fetchCosts} from "./store/costSlice.ts";
-import {fetchEvents} from "./store/eventSlice.ts";
 import {fetchUsers} from "./store/userSlice.ts";
 import {useEffect} from "react";
+import {useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, persistor} from "./store/store";
 import {PersistGate} from 'redux-persist/integration/react';
-import {fetchToken} from "./store/authSlice.ts";
-import {RootState} from "./store/reducers.ts";
-import {logout} from "./store/logOutSlice.ts";
+import {RootState} from "./store/rootReducer.ts";
+import {ErrorMessage} from "./enums/ErrorMessage";
+import {fetchToken} from "./store/authSlice";
+import {logout} from "./store/logOutSlice";
+import {fetchCosts} from "./store/costSlice";
+import {fetchEvents} from "./store/eventSlice";
 
 function App() {
     const dispatch = useDispatch<AppDispatch>();
-    const {loading, error} = useSelector((state: RootState) => state.auth);
+    const navigate = useNavigate();
+    const {token, authLoading, authError} = useSelector((state: RootState) => state.auth);
+
+    const handleLogout = async () => {
+        localStorage.clear();
+        await dispatch(logout());
+    };
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,26 +30,30 @@ function App() {
             await dispatch(fetchUsers());
             await dispatch(fetchEvents());
             await dispatch(fetchCosts());
-            //await dispatch(logout());
         };
 
         fetchData();
     }, [dispatch]);
 
-    if (loading) {
-        return <div>Loading...</div>;
+    useEffect(() => {
+        if (authError || !token) {
+            console.log(ErrorMessage.AN_ERROR_OCCURRED, authError);
+            navigate('/login');
+        } else navigate('/');
+    }, [authError, token, navigate]);
+
+    if (authLoading) {
+        return <div>Checking user authorization...</div>;
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (authError) {
+        return <div>Authorization failed, please sign up or log in</div>;
     }
 
     return (
         <PersistGate loading={null} persistor={persistor}>
             <ErrorBoundary>
-                <Typography variant="h4" component="h1" sx={{color: 'white'}}>
-                    YO!
-                </Typography>
+                <Button variant="outlined" onClick={handleLogout}>Logout</Button>
                 {/*<ErrorThrowingComponent/>*/}
             </ErrorBoundary>
         </PersistGate>
